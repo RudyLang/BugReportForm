@@ -74,13 +74,21 @@ namespace BugReporterForm
                 string comments = "";
                 comments = textBox1.Text;
 
+                // Grab date, hour, and minute
+                DateTime date = DateTime.Today;
+                int hour = DateTime.Now.Hour;
+                int minute = DateTime.Now.Minute;
+
                 MySqlCommand comm = conn.CreateCommand();
-                comm.CommandText = "INSERT INTO reports(type, comment) VALUES(?type, ?comment)";
+                comm.CommandText = "INSERT INTO reports(type, comment, date, hour, minute) VALUES(?type, ?comment, ?date, ?hour, ?minute)";
                 comm.Parameters.Add("?type", MySqlDbType.VarChar).Value = errorType;
                 comm.Parameters.Add("?comment", MySqlDbType.VarChar).Value = comments;
+                comm.Parameters.Add("?date", MySqlDbType.Date).Value = date;
+                comm.Parameters.Add("?hour", MySqlDbType.Int16).Value = hour;
+                comm.Parameters.Add("?minute", MySqlDbType.Int16).Value = minute;
                 comm.ExecuteNonQuery();
 
-                DialogResult dialog = MessageBox.Show("Error Reported!");
+                DialogResult dialog = MessageBox.Show("The error has been reported, thank you!");
                 if (dialog == DialogResult.OK)
                 {
                     Application.Exit();
